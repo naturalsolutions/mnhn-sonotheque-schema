@@ -1,2 +1,3 @@
 - "!include public_datasets.yaml"
 - "!include public_organizations.yaml"
+- "!include public_people.yaml"
