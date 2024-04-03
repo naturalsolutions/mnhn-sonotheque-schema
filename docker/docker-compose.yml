@@ -45,7 +45,7 @@ services:
       timeout: 1s
       retries: 10
     depends_on:
-      keycloak:
+      db:
         condition: service_healthy
     restart: always
     expose:
