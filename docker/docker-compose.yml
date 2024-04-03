@@ -1,0 +1,63 @@
+version: "3.9"
+
+x-restart-policy: &restart_policy
+  restart: unless-stopped
+
+x-project-defaults: &project_defaults
+  <<: *restart_policy
+  networks:
+    - project
+  extra_hosts:
+    - ${DOMAIN}:host-gateway
+  env_file: ./.env
+
+services:
+  traefik:
+    <<: *project_defaults
+    image: ${TRAEFIK_IMAGE}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    healthcheck:
+      test: ["CMD", "traefik", "healthcheck", "--ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+
+  db:
+    <<: *project_defaults
+    image: ${DB_IMAGE:-postgres:14-alpine}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -h 127.0.0.1"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 60s
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  graphql_engine:
+    <<: *project_defaults
+    image: ${HASURA_IMAGE}
+    healthcheck:
+      test: timeout 1s bash -c ':> /dev/tcp/127.0.0.1/8080' || exit 1
+      interval: 2s
+      timeout: 1s
+      retries: 10
+    depends_on:
+      keycloak:
+        condition: service_healthy
+    restart: always
+    expose:
+      - 8080
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.graphql_engine.entrypoints=web
+      - traefik.http.routers.graphql_engine.rule=PathPrefix(`/v1`) || PathPrefix(`/v2`)
+
+volumes:
+  db_data:
+
+networks:
+  project:
+    name: ${PROJECT}

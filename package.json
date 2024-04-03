@@ -1,0 +1,33 @@
+{
+  "name": "mnhn-sonotheque",
+  "version": "0.0.1",
+  "description": "## Requirements",
+  "main": "index.js",
+  "scripts": {
+    "d:ps": "./scripts/docker.sh ps",
+    "d:up": "./scripts/docker.sh up -d",
+    "d:down": "./scripts/docker.sh down",
+    "d:down:all": "./scripts/docker.sh down -v --remove-orphans",
+    "hasura": ". ./docker/.env && hasura --project ./hasura --admin-secret $HASURA_GRAPHQL_ADMIN_SECRET",
+    "hasura:console": ". ./docker/.env && hasura --project ./hasura --admin-secret $HASURA_GRAPHQL_ADMIN_SECRET console",
+    "hasura:squash": ". ./docker/.env && hasura --project ./hasura --admin-secret $HASURA_GRAPHQL_ADMIN_SECRET migrate squash",
+    "hasura:migrate:all": ". ./docker/.env && hasura --project ./hasura --admin-secret $HASURA_GRAPHQL_ADMIN_SECRET migrate apply",
+    "hasura:seed:create": ". ./docker/.env && hasura --project ./hasura --admin-secret $HASURA_GRAPHQL_ADMIN_SECRET seed create",
+    "hasura:seed:apply": ". ./docker/.env && hasura --project ./hasura --admin-secret $HASURA_GRAPHQL_ADMIN_SECRET seed apply",
+    "hasura:metadata:apply": ". ./docker/.env && hasura --project ./hasura --admin-secret $HASURA_GRAPHQL_ADMIN_SECRET metadata apply",
+    "hasura:metadata:ic:list": ". ./docker/.env && hasura --project ./hasura --admin-secret $HASURA_GRAPHQL_ADMIN_SECRET metadata ic list"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@gitlab.com/natural-solutions/ecoteka-pro.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://gitlab.com/natural-solutions/ecoteka-pro/issues"
+  },
+  "homepage": "https://gitlab.com/natural-solutions/ecoteka-pro#readme",
+  "devDependencies": {
+    "hasura-cli": "^2.9.0"
+  }
+}
