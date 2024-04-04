@@ -72,8 +72,11 @@ TAXA {
     rank text
     status text
     author text
-    phyl
-
+    phyllum text
+    family text
+    genus text
+    remote_provider_source text
+    remote_provider_id text
 }
 
 ```
