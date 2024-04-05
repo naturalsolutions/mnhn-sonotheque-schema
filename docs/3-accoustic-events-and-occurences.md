@@ -2,6 +2,10 @@
 
 ## Présentation sommaire
 
+Chaque média (Son, Vidéo ou Image) peut témoigner de la **présence d'un ou plusieurs sujets biologiques**. Afin de renseigner le présence de ces sujets, nous propons d'introduire au sein du système de gestion le concept d'occurences `Occurence` complété par le concept d'évenements acoustiques `AccousticEvent`.
+
+Les [occurences](https://dwc.tdwg.org/list/#dwc_Occurrence) marque l'existence d'un organisme biologique dans un périmètre spatial et temporel défini. Dans le cadre de notre système de gestion, un média donné pour contenir aucune, une seule (_species sounds_) voir plusieurs occurences (_soundscape_). Par principe, la table d'occurence relie un media à un ou plusieurs taxa. Nous proposons que ce concept de liaison apporte des informations complémentaires sur la localisation (cette dernère pouvant être récupérés des classes liées comme la localisation du média ou de l'événement d'échantillonnage)
+
 ## Modèle conceptuel des données pour les classes concernées
 
 ```mermaid
