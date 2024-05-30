@@ -5,21 +5,21 @@ import pytest
 os.environ["FASTAPI_CONFIG"] = "testing"  # noqa
 
 from pytest_factoryboy import register
-from sonotheque.users.factories import UserFactory
-from sonotheque.tdd.factories import MemberFactory
+from src.users.factories import UserFactory
+from src.tdd.factories import MemberFactory
 
 register(UserFactory)
 register(MemberFactory)
 
 @pytest.fixture
 def settings():
-    from sonotheque.config import settings as _settings
+    from src.config import settings as _settings
     return _settings
 
 
 @pytest.fixture
 def app(settings):
-    from sonotheque import create_app
+    from src import create_app
 
     app = create_app()
     return app
@@ -27,7 +27,7 @@ def app(settings):
 
 @pytest.fixture()
 def db_session(app):
-    from sonotheque.database import Base, engine, SessionLocal
+    from src.database import Base, engine, SessionLocal
 
     Base.metadata.create_all(bind=engine)
     session = SessionLocal()

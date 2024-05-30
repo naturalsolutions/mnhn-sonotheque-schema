@@ -2,9 +2,9 @@ from unittest import mock
 
 import pytest
 
-from sonotheque.celery_utils import custom_celery_task
-from sonotheque.database import db_context
-from sonotheque.users.models import User
+from src.celery_utils import custom_celery_task
+from src.database import db_context
+from src.users.models import User
 
 
 # tasks

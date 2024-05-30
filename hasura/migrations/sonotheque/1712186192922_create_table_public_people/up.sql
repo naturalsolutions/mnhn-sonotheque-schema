@@ -1,2 +1,0 @@
-CREATE TABLE "public"."people" ("id" uuid NOT NULL DEFAULT gen_random_uuid(), "full_name" text NOT NULL, "birth_date" date NOT NULL, "death_date" date NOT NULL, "has_gender" text NOT NULL, "email" text NOT NULL, "identity_provider" text NOT NULL, "identity_token" text NOT NULL, PRIMARY KEY ("id") , UNIQUE ("id"));COMMENT ON TABLE "public"."people" IS E'A physical person, living or passed';
-CREATE EXTENSION IF NOT EXISTS pgcrypto;

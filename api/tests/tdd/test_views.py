@@ -1,8 +1,8 @@
 import os
 from unittest import mock
 
-from sonotheque.tdd import tasks
-from sonotheque.tdd.models import Member
+from src.tdd import tasks
+from src.tdd.models import Member
 
 
 def test_post(client, db_session, settings, member_factory, monkeypatch):

@@ -5,9 +5,33 @@ from sqlalchemy import pool
 
 from alembic import context
 
-from sonotheque import create_app
-from sonotheque.config import settings
-from sonotheque.database import Base
+from src import create_app
+from src.config import settings
+from src.database import Base
+
+
+def include_name(name, type_, parent_names) -> bool:
+    """
+    Determine if a given database object should be included in the migration scripts.
+
+    This function is used to filter out specific database objects during the migration process.
+    It is particularly useful for excluding objects from certain schemas, such as PostGIS objects,
+    which might otherwise be automatically included and processed by Alembic.
+    For PostGis specifically, see: https://github.com/sqlalchemy/alembic/discussions/1282
+
+    Args:
+        name (str): The name of the database object.
+        type_ (str): The type of the database object (e.g., 'table', 'schema').
+        parent_names (dict): A dictionary containing the parent names of the database object.
+
+    Returns:
+        bool: True if the object should be included, False otherwise.
+    """
+    if type_ == "schema":
+        return False
+    else:
+        return True
+
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -52,6 +76,7 @@ def run_migrations_offline() -> None:
         target_metadata=target_metadata,
         literal_binds=True,
         dialect_opts={"paramstyle": "named"},
+        include_name=include_name,
     )
 
     with context.begin_transaction():
@@ -73,7 +98,9 @@ def run_migrations_online() -> None:
 
     with connectable.connect() as connection:
         context.configure(
-            connection=connection, target_metadata=target_metadata
+            connection=connection,
+            target_metadata=target_metadata,
+            include_name=include_name,
         )
 
         with context.begin_transaction():

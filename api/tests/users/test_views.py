@@ -1,7 +1,7 @@
 import requests
 from unittest import mock
-from sonotheque.users import users_router, tasks
-from sonotheque.users.models import User
+from src.users import users_router, tasks
+from src.users.models import User
 
 
 def test_pytest_setup(client, db_session):

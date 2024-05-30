@@ -2,8 +2,8 @@ import os
 
 from PIL import Image
 
-from sonotheque.tdd.models import Member
-from sonotheque.tdd.tasks import generate_avatar_thumbnail
+from src.tdd.models import Member
+from src.tdd.tasks import generate_avatar_thumbnail
 
 
 def test_task_generate_avatar_thumbnail(db_session, settings, member):

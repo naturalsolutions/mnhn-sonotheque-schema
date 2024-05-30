@@ -4,7 +4,7 @@ import pytest
 import requests
 from celery.exceptions import Retry
 
-from sonotheque.users.tasks import task_add_subscribe
+from src.users.tasks import task_add_subscribe
 
 
 def test_post_succeed(db_session, monkeypatch, user):

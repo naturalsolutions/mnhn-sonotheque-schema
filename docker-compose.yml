@@ -56,7 +56,7 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    restart: always
+    # restart: always
     expose:
       - 8080
     labels:
