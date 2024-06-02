@@ -14,9 +14,18 @@ class Person(DefaultColsMixin, Base):
     email = Column(String)
     identity_provider = Column(String)
     identity_token = Column(String)
+
+    ### ForeignKeys ###
+
     created_datasets = relationship(
         "Dataset", foreign_keys="Dataset.created_by", back_populates="creator"
     )
     maintained_datasets = relationship(
         "Dataset", foreign_keys="Dataset.maintained_by", back_populates="maintainer"
     )
+
+    ### Relationships with backref ###
+    created_medias = relationship("Media", backref="creator")
+    edited_medias = relationship("Media", backref="editor")
+    recorded_medias = relationship("Media", backref="recorder")
+    owned_media_files = relationship("MediaFile", backref="owner")

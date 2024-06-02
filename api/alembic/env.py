@@ -8,6 +8,12 @@ from alembic import context
 from src import create_app
 from src.config import settings
 from src.database import Base
+from src.users.models import User
+from src.tdd.models import Member
+from src.datasets.models import Dataset
+from src.locations.models import Location
+from src.people.models import Person
+from src.organizations.models import Organization
 
 
 def include_name(name, type_, parent_names) -> bool:

@@ -25,12 +25,12 @@ class Organization(DefaultColsMixin, Base):
         nullable=True,
         comment="Foreign Key to the orgzanization contact; just one contact for a given organization in this version of the schema",
     )
-    # located_in = Column(
-    #     UUID(as_uuid=True),
-    #     ForeignKey("locations.id"),
-    #     nullable=True,
-    #     comment="FK to location",
-    # )
+    location_id = Column(
+        UUID(as_uuid=True),
+        ForeignKey("locations.id"),
+        nullable=True,
+        comment="FK to location",
+    )
     description = Column(
         String, nullable=True, comment="Description of the organization"
     )
@@ -40,11 +40,18 @@ class Organization(DefaultColsMixin, Base):
         comment="Flexible JSON schema to store additional properties",
     )
 
-    children = relationship("Organization", backref="parent")
-    parent = relationship("Organization", backref="children", remote_side=[id])
-    contact_person = relationship(
-        "Person", foreign_keys=[contact_id], backref="organization"
+    # children = relationship("Organization", backref="parent")
+    parent = relationship(
+        "Organization",
+        foreign_keys=[parent_id],
+        remote_side=[id],
+        backref="children",
     )
+
+    contact_person = relationship(
+        "Person", foreign_keys=[contact_id], backref="organizations"
+    )
+    location = relationship("Location", back_populates="organizations")
 
     def to_dict(self, include_relationships=False):
         """Converts the Organization object into a dictionary, optionally including relationships."""
