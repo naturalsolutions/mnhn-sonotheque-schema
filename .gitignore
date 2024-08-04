@@ -6,3 +6,4 @@ meilisearch/data.ms
 .DS_Store
 .yarn
 docker/.env
+notes.md

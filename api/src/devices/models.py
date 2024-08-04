@@ -5,7 +5,6 @@ from typing import List
 import uuid
 
 from src.database import Base, DefaultColsMixin
-from src.media_files.models import MediaFilesToDevicesAssociation
 from src.devices.schemas import DeviceType
 
 
@@ -26,7 +25,7 @@ class Device(DefaultColsMixin, Base):
         comment="Version of the firmware installed on the device during recording",
     )
     type = Column(
-        DeviceType,
+        Text,
         nullable=False,
         comment="Type of the capture device; e.g Recorder, Microphone, Camera, Camera trap",
     )

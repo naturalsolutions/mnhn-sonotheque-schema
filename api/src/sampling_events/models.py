@@ -1,5 +1,5 @@
-from sqlalchemy import Column, ARRAY, JSONB, TIMESTAMP, ForeignKey, Text
-from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy import Column, ARRAY, TIMESTAMP, ForeignKey, Text
+from sqlalchemy.dialects.postgresql import UUID, JSONB
 from sqlalchemy.orm import relationship
 
 from src.database import Base, DefaultColsMixin

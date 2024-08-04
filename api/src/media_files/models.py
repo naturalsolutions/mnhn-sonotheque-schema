@@ -4,31 +4,7 @@ from sqlalchemy.orm import Mapped, relationship
 
 from typing import List
 
-from api.src.database import Base, DefaultColsMixin
-from src.devices.models import Device
-
-
-class MediaFilesToDevicesAssociation(DefaultColsMixin, Base):
-    __tablename__ = "media_files_to_devices_association"
-    media_file_id = Column(
-        UUID(as_uuid=True),
-        ForeignKey("media_files.id"),
-        primary_key=True,
-        comment="Media file UUID",
-    )
-    device_id = Column(
-        UUID(as_uuid=True),
-        ForeignKey("devises.id"),
-        primary_key=True,
-        comment="Devise UUID",
-    )
-    extra_data = Column(JSONB, comment="Extra data for device-media association")
-
-    # association between Assocation -> MediaFile
-    media_file: Mapped["MediaFile"] = relationship(back_populates="device_associations")
-
-    # association between Assocation -> Parent
-    device: Mapped["Device"] = relationship(back_populates="media_file_associations")
+from src.database import Base, DefaultColsMixin
 
 
 class MediaFile(DefaultColsMixin, Base):

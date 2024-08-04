@@ -6,12 +6,12 @@ from sqlalchemy import (
     Text,
     ARRAY,
     TIMESTAMP,
-    Range,
     UUID,
 )
+from sqlalchemy.dialects.postgresql import DATERANGE
 import uuid
 from sqlalchemy.orm import relationship
-from api.src.database import DefaultColsMixin
+from src.database import DefaultColsMixin
 from src.database import Base
 
 
@@ -68,7 +68,7 @@ class Media(DefaultColsMixin, Base):
         comment="Information about technical aspects of the creation and digitization process of the resource. This includes modification steps ('retouching') after the initial resource capture. See: http://rs.tdwg.org/ac/terms/resourceCreationTechnique",
     )
     available = Column(
-        Range(TIMESTAMP),
+        DATERANGE,
         comment="Date (often a range) that the resource became or will become available.",
     )
     created_at = Column(TIMESTAMP, comment="Timestamp of resource creation in database")
@@ -81,7 +81,7 @@ class Media(DefaultColsMixin, Base):
         comment="Timestamp of resource recording  The date and time MUST comply with the World Wide Web Consortium (W3C) datetime practice, https://www.w3.org/TR/NOTE-datetime See: http://ns.adobe.com/xap/1.0/CreateDate",
     )
     recording_range = Column(
-        Range(TIMESTAMP), comment="Recording timestamp exact temporal coverage"
+        DATERANGE, comment="Recording timestamp exact temporal coverage"
     )
     temporal = Column(
         Text,

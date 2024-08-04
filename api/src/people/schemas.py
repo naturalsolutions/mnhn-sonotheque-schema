@@ -1,4 +1,4 @@
-from pydantic import BaseModel, EmailStr, UUID4
+from pydantic import BaseModel, UUID4
 from typing import Optional
 from datetime import date
 
@@ -9,7 +9,7 @@ class Person(BaseModel):
     birth_date: Optional[date] = None
     death_date: Optional[date] = None
     has_gender: Optional[str] = None
-    email: Optional[EmailStr] = None
+    email: Optional[str] = None
     identity_provider: Optional[str] = None
     identity_token: Optional[str] = None
 

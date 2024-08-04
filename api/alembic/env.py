@@ -2,6 +2,8 @@ from logging.config import fileConfig
 
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
+import geoalchemy2
+
 
 from alembic import context
 
@@ -14,6 +16,10 @@ from src.datasets.models import Dataset
 from src.locations.models import Location
 from src.people.models import Person
 from src.organizations.models import Organization
+from src.medias.models import Media
+from src.media_files.models import MediaFile
+from src.media_files_to_devices.models import MediaFilesToDevicesAssociation
+from src.sampling_events.models import SamplingEvent
 
 
 def include_name(name, type_, parent_names) -> bool:
