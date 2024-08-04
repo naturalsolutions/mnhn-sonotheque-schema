@@ -5,7 +5,6 @@ from typing import List
 import uuid
 
 from src.database import Base, DefaultColsMixin
-from src.devices.schemas import DeviceType
 
 
 class Device(DefaultColsMixin, Base):

@@ -2,6 +2,7 @@ from logging.config import fileConfig
 
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
+from sqlalchemy import MetaData
 import geoalchemy2
 
 
@@ -10,16 +11,6 @@ from alembic import context
 from src import create_app
 from src.config import settings
 from src.database import Base
-from src.users.models import User
-from src.tdd.models import Member
-from src.datasets.models import Dataset
-from src.locations.models import Location
-from src.people.models import Person
-from src.organizations.models import Organization
-from src.medias.models import Media
-from src.media_files.models import MediaFile
-from src.media_files_to_devices.models import MediaFilesToDevicesAssociation
-from src.sampling_events.models import SamplingEvent
 
 
 def include_name(name, type_, parent_names) -> bool:
@@ -60,9 +51,19 @@ if config.config_file_name is not None:
 # target_metadata = mymodel.Base.metadata
 config.set_main_option("sqlalchemy.url", str(settings.DATABASE_URL))
 
+
+# Replace the existing target_metadata definition with:
+def combine_metadata(*args):
+    m = MetaData()
+    for metadata in args:
+        for t in metadata.tables.values():
+            t.tometadata(m)
+    return m
+
+
 fastapi_app = create_app()
 
-target_metadata = Base.metadata
+target_metadata = combine_metadata(Base.metadata)
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:

@@ -1,4 +1,4 @@
-import os
+# import os
 from contextlib import asynccontextmanager
 from broadcaster import Broadcast
 from fastapi import FastAPI, Request
@@ -19,23 +19,40 @@ def create_app() -> FastAPI:
     app = FastAPI(lifespan=lifespan, root_path="/")
 
     from src.logging import configure_logging
+
     configure_logging()
 
     # do this before loading routes
     from src.celery_utils import create_celery
+
     app.celery_app = create_celery()
 
-    from src.users import users_router
-    app.include_router(users_router)
+    from src.models import (
+        datasets,  # noqa
+        medias,  # noqa
+        media_files,  # noqa
+        organizations,  # noqa
+        people,  # noqa
+        devices,  # noqa
+        sampling_events,  # noqa
+        locations,  # noqa
+    )
 
-    from src.tdd import tdd_router
-    app.include_router(tdd_router)
+    # from src.users import users_router
 
-    from src.ws import ws_router
-    app.include_router(ws_router)
+    # app.include_router(users_router)
 
-    from src.ws.views import register_socketio_app
-    register_socketio_app(app)
+    # from src.tdd import tdd_router
+
+    # app.include_router(tdd_router)
+
+    # from src.ws import ws_router
+
+    # app.include_router(ws_router)
+
+    # from src.ws.views import register_socketio_app
+
+    # register_socketio_app(app)
 
     @app.get("/")
     async def root(request: Request):
