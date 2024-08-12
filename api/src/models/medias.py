@@ -138,3 +138,7 @@ class Media(DefaultColsMixin, Base):
     ### Relationships with backref ###
     media_files = relationship("MediaFile", backref="media")
     parent = relationship("Media", remote_side=[id], backref="children")
+    # Relationships with backpopulates
+    location = relationship("Location", back_populates="media")  # occurs in
+    acoustic_events = relationship("AcousticEvent", back_populates="media")  # contains
+    occurrences = relationship("Occurrence", back_populates="media")  # has

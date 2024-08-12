@@ -36,7 +36,13 @@ def create_app() -> FastAPI:
         devices,  # noqa
         sampling_events,  # noqa
         locations,  # noqa
+        occurences,  # noqa
+        taxa,  # noqa
+        identifications,  # noqa
+        acoustic_events,  # noqa
+        # captures_rel,  # noqa
     )
+    from src.models.associations import captures_rel  # noqa
 
     # from src.users import users_router
 

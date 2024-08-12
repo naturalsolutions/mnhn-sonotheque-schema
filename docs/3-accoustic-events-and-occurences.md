@@ -26,7 +26,7 @@ MEDIA ||--|{ ACCOUSTIC_EVENTS : contains
 MEDIA ||--|{ OCCURENCES : has
 ACCOUSTIC_EVENTS ||--|{ OCCURENCES : contains
 OCCURENCES ||--o{ TAXA : subject_of
-OCCURENCES ||--o{ IDENTIFICATIONS : identifies_taxon
+OCCURENCES ||--o{ IDENTIFICATIONS : subject_of
 IDENTIFICATIONS ||--o| TAXA : taxon_verification
 IDENTIFICATIONS ||--o{ PEOPLE : verified_by
 IDENTIFICATIONS ||--o{ PEOPLE : reviewed_by
@@ -50,9 +50,9 @@ OCCURENCES {
     life_stage	text	"The age class or life stage of the dwc:Organism(s) at the time the dwc:Occurrence was recorded. Examples: larva, juvenile, adult… See: http://rs.tdwg.org/dwc/terms/lifeStage"
     sex	text	"The sex of the biological individual(s) represented in the dwc:Occurrence. See: http://rs.tdwg.org/dwc/terms/sex"
     degree_of_establishment	text	"The degree to which a dwc:Organism survives, reproduces, and expands its range at the given place and time. Examples: native, captive, cultivated, released, failing, casual, reproducing, established, colonising, invasive, widespreadInvasive... See: http://rs.tdwg.org/dwc/terms/degreeOfEstablishment"
-    associated_media_id	uuid	"Foreign Key to associated media"
-    associated_taxa_id	uuid	"Foreign Key to associated taxa"
-    associated_location_id	uuid	"Foreign Key to associated location"
+    media_id	uuid	"Foreign Key to associated media"
+    taxa_id	uuid	"Foreign Key to associated taxa"
+    location_id	uuid	"Foreign Key to associated location"
     identification_id	uuid	"Foreign Key to identification"
 }
 IDENTIFICATIONS {

@@ -9,6 +9,8 @@ import geoalchemy2
 from alembic import context
 
 from src import create_app
+
+
 from src.config import settings
 from src.database import Base
 
@@ -64,6 +66,7 @@ def combine_metadata(*args):
 fastapi_app = create_app()
 
 target_metadata = combine_metadata(Base.metadata)
+# target_metadata = Base.metadata
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:

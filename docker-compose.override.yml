@@ -19,11 +19,11 @@ services:
   graphql_engine:
     image: sonotheque-mnhn-hasura-dev
     build:
-      context: ./hasura
+      context: ./graphql_engine
     volumes:
-      - ./hasura/migrations:/hasura-migrations
-      - ./hasura/metadata:/hasura-metadata
-      - ./hasura/seeds:/hasura-seeds
+      - ./graphql_engine/migrations:/hasura-migrations
+      - ./graphql_engine/metadata:/hasura-metadata
+      - ./graphql_engine/seeds:/hasura-seeds
     environment:
       - HASURA_GRAPHQL_ENABLE_CONSOLE=true
       - HASURA_GRAPHQL_DEV_MODE=true

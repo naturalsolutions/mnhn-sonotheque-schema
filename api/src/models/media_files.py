@@ -1,8 +1,7 @@
 from sqlalchemy import Column, String, Integer, Float, ForeignKey
 from sqlalchemy.dialects.postgresql import UUID, JSONB, ARRAY
-from sqlalchemy.orm import Mapped, relationship
+from sqlalchemy.orm import relationship
 
-from typing import List
 
 from src.database import Base, DefaultColsMixin
 
@@ -61,12 +60,5 @@ class MediaFile(DefaultColsMixin, Base):
         UUID(as_uuid=True), ForeignKey("people.id"), comment="Owner's UUID"
     )
 
-    # many-to-many relationship to Device, bypassing the `Association` class
-    devices: Mapped[List["Device"]] = relationship(
-        secondary="media_files_to_devices_association", back_populates="media_files"
-    )
-
-    # association between MediaFile -> MediaFilesToDevicesAssociation -> Device
-    device_associations: Mapped[List["MediaFilesToDevicesAssociation"]] = relationship(
-        back_populates="media_file"
-    )
+    # many-to-many relationship to Device SqlAlchemy class with a custom association table
+    devices = relationship("Device", secondary="captures", back_populates="media_files")

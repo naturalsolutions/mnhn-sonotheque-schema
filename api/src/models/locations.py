@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, ForeignKey, Float
+from sqlalchemy import Column, DateTime, String, ForeignKey, Float, func
 from sqlalchemy.dialects.postgresql import UUID, JSONB
 from sqlalchemy.orm import relationship
 from geoalchemy2 import Geometry
@@ -62,6 +62,10 @@ class Location(DefaultColsMixin, Base):
         nullable=True,
         comment="Source URL of the external service providing the ID",
     )
+    # Timestamps
+    created_at = Column(DateTime, server_default=func.now())
+    updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now())
+
     ### ForeignKeys ###
     parent_id = Column(
         UUID(as_uuid=True),
@@ -70,8 +74,8 @@ class Location(DefaultColsMixin, Base):
         comment="Identifier for the parent location",
     )
 
-    ### Relationship with backref ###
-    sampling_events = relationship("SamplingEvent", backref="location")
-
     ### Relationship with back_populates ###
+    sampling_events = relationship("SamplingEvent", back_populates="location")
+    occurrences = relationship("Occurrence", back_populates="location")
     organizations = relationship("Organization", back_populates="located_in")
+    media = relationship("Media", back_populates="location")

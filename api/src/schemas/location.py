@@ -1,3 +1,4 @@
+from datetime import datetime
 from pydantic import BaseModel, Field
 from typing import Optional
 from uuid import UUID
@@ -38,6 +39,8 @@ class LocationUpdate(LocationBase):
 
 class Location(LocationBase):
     id: UUID
+    created_at: datetime
+    updated_at: datetime
 
     @staticmethod
     def from_orm(obj):

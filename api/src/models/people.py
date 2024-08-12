@@ -29,3 +29,7 @@ class Person(DefaultColsMixin, Base):
     edited_medias = relationship("Media", backref="editor")
     recorded_medias = relationship("Media", backref="recorder")
     owned_media_files = relationship("MediaFile", backref="owner")
+    reviewed_identifications = relationship("Identification", back_populates="reviewer")
+    submitted_identifications = relationship(
+        "Identification", back_populates="identifier"
+    )

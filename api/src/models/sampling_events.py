@@ -52,4 +52,5 @@ class SamplingEvent(DefaultColsMixin, Base):
 
     ### # Relationship with backref ###
     parent = relationship("SamplingEvents", backref="children", remote_side=[id])
-    medias = relationship("Media", backref="sampling_event")
+    medias = relationship("Media", backref="sampling_event")  # sampled_in
+    location = relationship("Location", backref="sampling_events")  # sampled_at
