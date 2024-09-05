@@ -44,6 +44,10 @@ def create_app() -> FastAPI:
     )
     from src.models.associations import captures_rel  # noqa
 
+    from src.routers.import_tasks import router as import_tasks_router
+
+    app.include_router(import_tasks_router)
+
     # from src.users import users_router
 
     # app.include_router(users_router)

@@ -1,15 +1,21 @@
 from sqlalchemy import Column, ARRAY, TIMESTAMP, ForeignKey, Text
 from sqlalchemy.dialects.postgresql import UUID, JSONB
 from sqlalchemy.orm import relationship
-
+import uuid
 from src.database import Base, DefaultColsMixin
 
 
 class SamplingEvent(DefaultColsMixin, Base):
     __tablename__ = "sampling_events"
-
+    id = Column(
+        UUID(as_uuid=True),
+        primary_key=True,
+        default=uuid.uuid4,
+        comment="Sampling event identifier See: http://purl.org/dc/terms/identifier",
+    )
     parent_id = Column(
         UUID(as_uuid=True),
+        ForeignKey("sampling_events.id"),
         comment="An identifier for the broader dwc:Event that groups this and potentially other dwc:Events.",
     )
     basis_of_record = Column(
@@ -51,6 +57,8 @@ class SamplingEvent(DefaultColsMixin, Base):
     )
 
     ### # Relationship with backref ###
-    parent = relationship("SamplingEvents", backref="children", remote_side=[id])
-    medias = relationship("Media", backref="sampling_event")  # sampled_in
-    location = relationship("Location", backref="sampling_events")  # sampled_at
+    parent = relationship(
+        "SamplingEvent", backref="children", remote_side=[id], foreign_keys=[parent_id]
+    )
+    medias = relationship("Media", back_populates="sampling_event")  # sampled_in
+    location = relationship("Location", back_populates="sampling_events")  # sampled_at

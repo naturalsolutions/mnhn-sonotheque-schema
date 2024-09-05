@@ -21,11 +21,11 @@ class AcousticEvent(Base):
     created_at = Column(DateTime, server_default=func.now())
     updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now())
 
-    # Foreign keys
-    is_roi_of = Column(UUID)
-    identification_id = Column(UUID)
-    occurrence_id = Column(UUID)
+    # TODOS: Foreign keys should be fixed
+    # is_roi_of = Column(UUID)
+    # identification_id = Column(UUID)
+    # occurrence_id = Column(UUID)
 
     # Relationships with backpopulates
-    media = relationship("Media", back_populates="acoustic_events")
+    # media = relationship("Media", back_populates="acoustic_events")
     occurrences = relationship("Occurrence", back_populates="acoustic_event")

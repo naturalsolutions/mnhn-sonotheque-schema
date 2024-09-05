@@ -77,5 +77,5 @@ class Location(DefaultColsMixin, Base):
     ### Relationship with back_populates ###
     sampling_events = relationship("SamplingEvent", back_populates="location")
     occurrences = relationship("Occurrence", back_populates="location")
-    organizations = relationship("Organization", back_populates="located_in")
+    organizations = relationship("Organization", back_populates="location")
     media = relationship("Media", back_populates="location")

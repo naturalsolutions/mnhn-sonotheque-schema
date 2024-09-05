@@ -1,3 +1,23 @@
+"""
+This module initializes and imports all the SQLAlchemy models used in the application.
+
+The models included are:
+- datasets
+- medias
+- media_files
+- organizations
+- people
+- devices
+- sampling_events
+- locations
+- occurences
+- taxa
+- identifications
+- acoustic_events
+
+Additionally, it imports the associations for captures_rel.
+"""
+
 # noqa
 from . import (
     datasets,  # noqa
@@ -15,3 +35,5 @@ from . import (
 )
 
 from .associations import captures_rel  # noqa
+
+

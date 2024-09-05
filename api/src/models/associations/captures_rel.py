@@ -24,5 +24,6 @@ class Captures(DefaultColsMixin, Base):
     )
 
     # Relationships
-    device: Mapped["Device"] = relationship(back_populates="captures")
-    media_file: Mapped["MediaFile"] = relationship(back_populates="captures")
+    #  TODO: Add missing mappers to Device and MediaFile
+    # device: Mapped["Device"] = relationship(back_populates="captures")
+    # media_file: Mapped["MediaFile"] = relationship(back_populates="captures")

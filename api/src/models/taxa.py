@@ -1,7 +1,6 @@
 from sqlalchemy import Column, DateTime, Integer, String, Boolean, func
 from sqlalchemy.dialects.postgresql import UUID, JSONB
-
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import relationship
 import uuid
 
 from src.database import Base
@@ -49,3 +48,8 @@ class Taxon(Base):
     # Timestamps
     created_at = Column(DateTime, server_default=func.now())
     updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now())
+
+    # Relationship
+
+    occurrences = relationship("Occurrence", back_populates="taxon")
+    identifications = relationship("Identification", back_populates="taxon")

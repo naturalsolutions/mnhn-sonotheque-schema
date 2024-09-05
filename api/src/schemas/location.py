@@ -9,11 +9,12 @@ from shapely.geometry import mapping
 class LocationBase(BaseModel):
     parent_id: Optional[UUID]
     higher_geography_path: Optional[str]
-    geom: Optional[dict] = Field(
-        None, description="Spatial geometry representing a given location as GeoJSON"
+    geom: Optional[str] = Field(
+        None,
+        description="Spatial geometry representing a given location as Well-Known Text (WKT) format",
     )
     geometry_precision: Optional[float]
-    identifier: str
+    identifier: Optional[str]
     country: Optional[str]
     state_province: Optional[str]
     municipality: Optional[str]

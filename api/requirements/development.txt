@@ -25,3 +25,4 @@ python-multipart==0.0.6
 gunicorn==21.2.0
 geoalchemy2==0.15.1
 shapely==2.0.4
+dask[dataframe]==2024.8.0

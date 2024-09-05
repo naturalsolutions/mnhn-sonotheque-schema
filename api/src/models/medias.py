@@ -15,17 +15,6 @@ from src.database import DefaultColsMixin
 from src.database import Base
 
 
-class MediaType(Enum):
-    image = "StillImage"
-    sound = "Sound"
-    video = "MovingImage"
-
-
-class MediaSubtype(Enum):
-    species_sound = "SpeciesSound"
-    soundscape = "Soundscape"
-    song = "Song"
-
 
 class Media(DefaultColsMixin, Base):
     __tablename__ = "media"
@@ -35,7 +24,17 @@ class Media(DefaultColsMixin, Base):
         default=uuid.uuid4,
         comment="Media identifier See: http://purl.org/dc/terms/identifier",
     )
-    parent_id = Column(UUID(as_uuid=True), comment="Parent media identifier")
+    parent_id = Column(
+        UUID(as_uuid=True),
+        ForeignKey("media.id"),
+        nullable=True,
+        comment="Parent media identifier",
+    )
+    legacy_uid = Column(
+        Text,
+        nullable=False,
+        comment="Legacy identifier from the sonotheque oracle database",
+    )
     code = Column(
         Text,
         comment="A free-form identifier (a simple number, an alphanumeric code, a URL, etc.) for the resource that is unique and meaningful primarily for the data provider. See: http://rs.tdwg.org/ac/terms/providerManagedID",
@@ -45,11 +44,11 @@ class Media(DefaultColsMixin, Base):
         comment="Concise title, name, or brief descriptive label of institution, resource collection, or individual resource. This field SHOULD include the complete title with all the subtitles, if any. See: http://purl.org/dc/terms/title",
     )
     type = Column(
-        MediaType,
+        Text,
         comment="Type of media: Still Image, MovingImage, Sound See: http://purl.org/dc/terms/identifier",
     )
     subtype = Column(
-        MediaSubtype,
+        Text,
         comment="Subtype of media, e.g Species Sound, Soundscape, Song… (ideally should be linked to a Vocabulary terms should have an. IRI)",
     )
     description = Column(
@@ -135,10 +134,20 @@ class Media(DefaultColsMixin, Base):
         comment="ID of the person who recorded the media",
     )
 
+    location_id = Column(
+        UUID(as_uuid=True),
+        ForeignKey("locations.id"),
+        nullable=True,
+        comment="ID of the associated location",
+    )
+
     ### Relationships with backref ###
     media_files = relationship("MediaFile", backref="media")
     parent = relationship("Media", remote_side=[id], backref="children")
     # Relationships with backpopulates
     location = relationship("Location", back_populates="media")  # occurs in
-    acoustic_events = relationship("AcousticEvent", back_populates="media")  # contains
+
+    # TODO: should be fixed mappers failed to be initialized
+    sampling_event = relationship("SamplingEvent", back_populates="medias")  # contains
+    # acoustic_events = relationship("AcousticEvent", back_populates="media")  # contains
     occurrences = relationship("Occurrence", back_populates="media")  # has

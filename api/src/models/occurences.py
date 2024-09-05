@@ -27,7 +27,7 @@ class Occurrence(Base):
 
     # Relationships with backpopulates
     media = relationship("Media", back_populates="occurrences")
-    taxon = relationship("Taxa", back_populates="occurrences")
+    taxon = relationship("Taxon", back_populates="occurrences")
     location = relationship("Location", back_populates="occurrences")
     acoustic_event = relationship("AcousticEvent", back_populates="occurrences")
 

@@ -1,13 +1,18 @@
 from sqlalchemy import Column, String, ForeignKey
 from sqlalchemy.dialects.postgresql import UUID, JSONB
 from sqlalchemy.orm import relationship
-
+import uuid
 from src.database import Base, DefaultColsMixin
 
 
 class Organization(DefaultColsMixin, Base):
     __tablename__ = "organizations"
-
+    id = Column(
+        UUID(as_uuid=True),
+        primary_key=True,
+        default=uuid.uuid4,
+        comment="Organization identifier See: http://purl.org/dc/terms/identifier",
+    )
     parent_id = Column(
         UUID(as_uuid=True),
         ForeignKey("organizations.id"),
@@ -40,13 +45,13 @@ class Organization(DefaultColsMixin, Base):
         comment="Flexible JSON schema to store additional properties",
     )
 
-    # children = relationship("Organization", backref="parent")
     parent = relationship(
         "Organization",
         foreign_keys=[parent_id],
         remote_side=[id],
         backref="children",
     )
+    # parent = relationship("Organization", remote_side=[id], backref="children")
 
     contact_person = relationship(
         "Person", foreign_keys=[contact_id], backref="organizations"

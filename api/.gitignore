@@ -1,1 +1,3 @@
 celery.log
+/tmp/
+/src/tmp/

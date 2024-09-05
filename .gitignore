@@ -7,3 +7,4 @@ meilisearch/data.ms
 .yarn
 docker/.env
 notes.md
+git-filter-repo
