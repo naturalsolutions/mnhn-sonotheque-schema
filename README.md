@@ -61,5 +61,9 @@ docker compose exec db pg_dump -U $POSTGRES_USER -d $POSTGRES_DB\
   --exclude-table=users \
   --exclude-table=follows \
   --exclude-table=posts \
-  > schema_dump.sql
+  > $DB_SCHEMA_DUMP_PATH
 ```
+
+Database conceptual data model can be preview at the following URL:
+
+[https://dbdiagram.io/d/sonothque_db_schema_v1_0_0_rc3-66ebcfb3a0828f8aa6594b36](https://dbdiagram.io/d/sonothque_db_schema_v1_0_0_rc3-66ebcfb3a0828f8aa6594b36)

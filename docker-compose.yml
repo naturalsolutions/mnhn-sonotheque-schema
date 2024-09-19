@@ -138,11 +138,37 @@ services:
     command: /start-flower
     volumes:
       - ./api:/app
-    ports:
-      - 5557:5555
     depends_on:
       - redis
       - db
+
+  jupyter:
+    <<: *project_defaults
+    image: ${JUPYTER_IMAGE:-jupyter/base-notebook:latest}
+    volumes:
+      - ./notebooks:/home/jovyan/work
+      - ./api/requirements.txt:/home/jovyan/requirements.txt
+    command: >
+      bash -c "pip install -r /home/jovyan/requirements.txt &&
+               start-notebook.sh --NotebookApp.token='' --NotebookApp.password=''"
+    ports:
+      - "${JUPYTER_PORT:-8893}:8888"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.jupyter.rule=Host(`${DOMAIN}`) && PathPrefix(`/jupyter`)"
+      - "traefik.http.services.jupyter.loadbalancer.server.port=8888"
+
+  jupyter_minimal:
+    <<: *project_defaults
+    build:
+      context: ./compose/local/jupyter
+      dockerfile: Dockerfile
+    volumes:
+      - ./notebooks:/home/jovyan/work
+    ports:
+      - 7777:8888
+    container_name: jupyter_notebook
+    command: "start-notebook.sh --NotebookApp.token="
 
 volumes:
   db_data:

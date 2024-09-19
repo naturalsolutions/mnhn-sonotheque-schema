@@ -1,5 +1,16 @@
 version: "3.9"
 
+x-restart-policy: &restart_policy
+  restart: unless-stopped
+
+x-project-defaults: &project_defaults
+  <<: *restart_policy
+  networks:
+    - project
+  extra_hosts:
+    - ${DOMAIN}:host-gateway
+  env_file: .env
+
 services:
   traefik:
     command:
@@ -27,3 +38,11 @@ services:
     environment:
       - HASURA_GRAPHQL_ENABLE_CONSOLE=true
       - HASURA_GRAPHQL_DEV_MODE=true
+
+  flower:
+    ports:
+      - 5557:5555
+
+  jupyter:
+    ports:
+      - "${JUPYTER_SERVICE_PORT:-8890}:8888"

@@ -31,4 +31,7 @@ dask[dataframe]==2024.8.0
 polars==1.5.0
 polars[all]
 patito==0.7.0
+duckdb==1.0.0
+ibis-framework[duckdb,geospatial]==9.4.0
+pygbif==0.6.4 
 

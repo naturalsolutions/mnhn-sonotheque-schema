@@ -4,7 +4,7 @@ from uuid import UUID
 from datetime import datetime
 
 
-class Dataset(BaseModel):
+class DatasetSchema(BaseModel):
     id: UUID = Field(..., description="An identifier for the set of resources")
     name: str = Field(
         ...,
@@ -15,15 +15,15 @@ class Dataset(BaseModel):
         None,
         description="Publication unique identifier for a reference associated to this datasets",
     )
-    created_by: UUID = Field(..., description="Foreign Key to the dataset creator")
-    maintained_by: UUID = Field(
-        ...,
+    created_by: Optional[UUID] = Field(None, description="Foreign Key to the dataset creator")
+    maintained_by: Optional[UUID] = Field(
+        None,
         description="Foreign Key to the dataset maintainers; just one maintainer for a given dataset in this version of the schema",
     )
     contact: UUID = Field(
         ..., description="Foreign Key to the contact person for this dataset"
     )
-    published_by: UUID = Field(..., description="Foreign Key to the organization")
+    published_by: Optional[UUID] = Field(..., description="Foreign Key to the organization")
     created_at: datetime = Field(..., description="Creation datetime for this resource")
     updated_at: datetime = Field(
         ..., description="Modification datetime for this resource"

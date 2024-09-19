@@ -3,7 +3,7 @@ from typing import Optional
 from datetime import date
 
 
-class Person(BaseModel):
+class PersonSchema(BaseModel):
     id: UUID4
     full_name: str
     birth_date: Optional[date] = None
