@@ -1,0 +1,178 @@
+version: "3.9"
+
+x-restart-policy: &restart_policy
+  restart: unless-stopped
+
+x-project-defaults: &project_defaults
+  <<: *restart_policy
+  networks:
+    - project
+  extra_hosts:
+    - ${DOMAIN}:host-gateway
+  env_file: .env
+
+services:
+  traefik:
+    <<: *project_defaults
+    image: ${TRAEFIK_IMAGE}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    healthcheck:
+      test: ["CMD", "traefik", "healthcheck", "--ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+
+  db:
+    <<: *project_defaults
+    image: ${DB_IMAGE:-postgres:14-alpine}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -h 127.0.0.1"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 60s
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  redis:
+    <<: *project_defaults
+    image: "${REDIS_IMAGE:-redis:7-alpine}"
+    healthcheck:
+      test: redis-cli ping
+      interval: 5s
+      timeout: 5s
+      retries: 3
+
+  graphql_engine:
+    <<: *project_defaults
+    image: ${HASURA_IMAGE}
+    healthcheck:
+      test: timeout 1s bash -c ':> /dev/tcp/127.0.0.1/8080' || exit 1
+      interval: 2s
+      timeout: 1s
+      retries: 10
+    depends_on:
+      db:
+        condition: service_healthy
+    # restart: always
+    expose:
+      - 8080
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.graphql_engine.entrypoints=web
+      - traefik.http.routers.graphql_engine.rule=PathPrefix(`/v1`) || PathPrefix(`/v2`)
+
+  api_web:
+    <<: *project_defaults
+    build:
+      context: .
+      dockerfile: ./compose/local/api/Dockerfile
+    image: sonotheque_api_web
+    restart: always
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/openapi.json"]
+      interval: 5s
+      timeout: 5s
+      retries: 3
+    depends_on:
+      - redis
+      - db
+    # '/start' is the shell script used to run the service
+    command: /start
+    # labels:
+    #   - traefik.enable=true
+    #   - traefik.http.routers.api.entrypoints=web
+    # - traefik.http.routers.api.rule=PathPrefix(`${API_ROOT_PATH}`)
+    # - traefik.http.routers.api.middlewares=api-stripprefix
+    # - traefik.http.middlewares.api-stripprefix.stripprefix.prefixes=${API_ROOT_PATH}
+    # this volume is used to map the files and folders on the host to the container
+    # so if we change code on the host, code in the docker container will also be changed
+
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.api_web.rule=Host(`${DOMAIN}`) && PathPrefix(`${API_ROOT_PATH}`)
+      - traefik.http.routers.api_web.entrypoints=web
+      - traefik.http.routers.api_web.middlewares=api_web-stripprefix
+      - traefik.http.middlewares.api_web-stripprefix.stripprefix.prefixes=${API_ROOT_PATH}
+      - traefik.http.services.api_web.loadbalancer.server.port=3000
+
+    volumes:
+      - ./api:/app
+    ports:
+      - 8010:3000
+
+  celery_worker:
+    <<: *project_defaults
+    build:
+      context: .
+      dockerfile: ./compose/local/api/Dockerfile
+    image: sonotheque_celery_worker
+    command: /start-celeryworker
+    volumes:
+      - ./api:/app
+    depends_on:
+      - redis
+      - db
+
+  celery_beat:
+    <<: *project_defaults
+    build:
+      context: .
+      dockerfile: ./compose/local/api/Dockerfile
+    image: sonotheque_celery_beat
+    command: /start-celerybeat
+    volumes:
+      - ./api:/app
+    depends_on:
+      - redis
+      - db
+
+  flower:
+    <<: *project_defaults
+    build:
+      context: .
+      dockerfile: ./compose/local/api/Dockerfile
+    image: sonotheque_celery_flower
+    command: /start-flower
+    volumes:
+      - ./api:/app
+    depends_on:
+      - redis
+      - db
+
+  jupyter:
+    <<: *project_defaults
+    image: ${JUPYTER_IMAGE:-jupyter/base-notebook:latest}
+    volumes:
+      - ./notebooks:/home/jovyan/work
+      - ./api/requirements.txt:/home/jovyan/requirements.txt
+    command: >
+      bash -c "pip install -r /home/jovyan/requirements.txt &&
+               start-notebook.sh --NotebookApp.token='' --NotebookApp.password=''"
+    ports:
+      - "${JUPYTER_PORT:-8893}:8888"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.jupyter.rule=Host(`${DOMAIN}`) && PathPrefix(`/jupyter`)"
+      - "traefik.http.services.jupyter.loadbalancer.server.port=8888"
+
+  jupyter_minimal:
+    <<: *project_defaults
+    build:
+      context: ./compose/local/jupyter
+      dockerfile: Dockerfile
+    volumes:
+      - ./notebooks:/home/jovyan/work
+    ports:
+      - 7777:8888
+    container_name: jupyter_notebook
+    command: "start-notebook.sh --NotebookApp.token="
+
+volumes:
+  db_data:
+
+networks:
+  project:
+    name: ${PROJECT}

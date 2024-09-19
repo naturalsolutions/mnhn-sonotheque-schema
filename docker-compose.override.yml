@@ -1,0 +1,48 @@
+version: "3.9"
+
+x-restart-policy: &restart_policy
+  restart: unless-stopped
+
+x-project-defaults: &project_defaults
+  <<: *restart_policy
+  networks:
+    - project
+  extra_hosts:
+    - ${DOMAIN}:host-gateway
+  env_file: .env
+
+services:
+  traefik:
+    command:
+      - --ping
+      - --api.insecure=true
+      - --providers.docker=true
+      - --providers.docker.exposedbydefault=false
+      - --entrypoints.web.address=:80
+    ports:
+      - ${TRAEFIK_PORT:-8888}:80
+      - ${TRAEFIK_DASHBOARD_PORT:-8889}:8080
+
+  db:
+    ports:
+      - ${DB_PORT:-5432}:5432
+
+  graphql_engine:
+    image: sonotheque-mnhn-hasura-dev
+    build:
+      context: ./graphql_engine
+    volumes:
+      - ./graphql_engine/migrations:/hasura-migrations
+      - ./graphql_engine/metadata:/hasura-metadata
+      - ./graphql_engine/seeds:/hasura-seeds
+    environment:
+      - HASURA_GRAPHQL_ENABLE_CONSOLE=true
+      - HASURA_GRAPHQL_DEV_MODE=true
+
+  flower:
+    ports:
+      - 5557:5555
+
+  jupyter:
+    ports:
+      - "${JUPYTER_SERVICE_PORT:-8890}:8888"
