@@ -232,6 +232,9 @@ def insert_taxa_checklist(db_path) -> str:
         raise
 
 
+GBIF_INDEX_SCIENTIFIC_NAME = 1
+
+
 @shared_task(name="fetch-taxa-gbif-data")
 def fetch_taxa_gbif_data(row: list) -> TaxonInDB:
     # import time
@@ -244,7 +247,7 @@ def fetch_taxa_gbif_data(row: list) -> TaxonInDB:
     # logger.info(f"Type of row: {type(row)}")
     # logger.info(f"Row content: {row}")
     # return row
-    scientific_name = row[1]
+    scientific_name = row[GBIF_INDEX_SCIENTIFIC_NAME]
     logger.info(f"scientific_name: {scientific_name}")
     taxon = fetch_gbif_result(scientific_name)
     logger.info(f"taxon: {taxon}")
