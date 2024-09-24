@@ -12,10 +12,10 @@ from src.tdd.tasks import generate_avatar_thumbnail
 
 @tdd_router.post("/member_signup/")
 def member_signup(
-        username: str = Form(...),
-        email: str = Form(...),
-        upload_file: UploadFile = File(...),
-        session: Session = Depends(get_db_session)
+    username: str = Form(...),
+    email: str = Form(...),
+    upload_file: UploadFile = File(...),
+    session: Session = Depends(get_db_session),
 ):
     """
     https://stackoverflow.com/questions/63580229/how-to-save-uploadfile-in-fastapi

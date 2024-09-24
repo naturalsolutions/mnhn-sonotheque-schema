@@ -39,11 +39,14 @@ class SamplingEventBase(Model):
         description="A list (concatenated and separated) of additional measurements or characteristics of the Event.",
     )
 
+
 class SamplingEventCreate(SamplingEventBase):
     pass
 
+
 class SamplingEventUpdate(SamplingEventBase):
     pass
+
 
 class SamplingEvent(SamplingEventBase):
     id: UUID4 = Field(
@@ -57,6 +60,6 @@ class SamplingEvent(SamplingEventBase):
     updated_at: datetime = Field(
         ..., description="Timestamp of resource update in database"
     )
-    
+
     class Config:
         orm_mode = True

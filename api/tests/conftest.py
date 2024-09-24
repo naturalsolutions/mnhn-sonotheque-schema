@@ -11,9 +11,11 @@ from src.tdd.factories import MemberFactory
 register(UserFactory)
 register(MemberFactory)
 
+
 @pytest.fixture
 def settings():
     from src.config import settings as _settings
+
     return _settings
 
 

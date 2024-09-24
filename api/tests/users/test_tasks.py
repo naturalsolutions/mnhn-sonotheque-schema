@@ -14,8 +14,7 @@ def test_post_succeed(db_session, monkeypatch, user):
     task_add_subscribe(user.id)
 
     mock_requests_post.assert_called_with(
-        "https://httpbin.org/delay/5",
-        data={"email": user.email}
+        "https://httpbin.org/delay/5", data={"email": user.email}
     )
 
 

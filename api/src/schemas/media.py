@@ -27,15 +27,15 @@ class MediaBase(BaseModel):
     tags: Optional[list[str]] = None
     comment: Optional[str] = None
     resource_creation_technique: Optional[str] = None
-    available: Optional[list[str]] = (
-        None  # Assuming a simple representation for the range of timestamps
-    )
+    available: Optional[
+        list[str]
+    ] = None  # Assuming a simple representation for the range of timestamps
     created_at: Optional[str] = None
     updated_at: Optional[str] = None
     recorded_at: Optional[str] = None
-    recording_range: Optional[list[str]] = (
-        None  # Assuming a simple representation for the range of timestamps
-    )
+    recording_range: Optional[
+        list[str]
+    ] = None  # Assuming a simple representation for the range of timestamps
     temporal: Optional[str] = None
     time_of_day: Optional[str] = None
     rating: Optional[int] = None

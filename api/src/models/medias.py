@@ -15,7 +15,6 @@ from src.database import DefaultColsMixin
 from src.database import Base
 
 
-
 class Media(DefaultColsMixin, Base):
     __tablename__ = "media"
     id = Column(

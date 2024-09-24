@@ -5,8 +5,12 @@ from uuid import UUID
 
 class MediaFiles(Model):
     id: Optional[UUID] = Field(None, description="Media file identifier")
-    storage_url: Optional[str] = Field(None, description="URL access point to the media")
-    mime_type_format: Optional[str] = Field(None, description="Mimetype format of the file")
+    storage_url: Optional[str] = Field(
+        None, description="URL access point to the media"
+    )
+    mime_type_format: Optional[str] = Field(
+        None, description="Mimetype format of the file"
+    )
     freq_low: Optional[float] = Field(
         None,
         description="The lowest frequency of the phenomena reflected in the multimedia item. Numeric value in hertz (Hz)",
@@ -19,7 +23,9 @@ class MediaFiles(Model):
         None,
         description="Associates a digital signal to its sample rate. Numeric value in hertz (Hz)",
     )
-    duration: Optional[int] = Field(None, description="Duration of the media in seconds")
+    duration: Optional[int] = Field(
+        None, description="Duration of the media in seconds"
+    )
     size: Optional[int] = Field(None, description="Size of the media in bytes")
     pixel_x_dimension: Optional[int] = Field(None, description="Pixel X dimension")
     pixel_y_dimension: Optional[int] = Field(None, description="Pixel Y dimension")
@@ -48,6 +54,10 @@ class MediaFiles(Model):
     )
     associated_media: Optional[UUID] = Field(None, description="Associated media UUID")
     owned_by: Optional[UUID] = Field(None, description="Owner's UUID")
-    owner_litteral: Optional[str] = Field(None, description="Legal owner of the resource")
-    created_at: Optional[str] = Field(None, description="Timestamp of resource creation")
+    owner_litteral: Optional[str] = Field(
+        None, description="Legal owner of the resource"
+    )
+    created_at: Optional[str] = Field(
+        None, description="Timestamp of resource creation"
+    )
     updated_at: Optional[str] = Field(None, description="Timestamp of resource update")

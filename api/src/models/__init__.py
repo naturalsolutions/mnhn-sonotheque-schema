@@ -35,5 +35,3 @@ from . import (
 )
 
 from .associations import captures_rel  # noqa
-
-

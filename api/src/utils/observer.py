@@ -12,9 +12,11 @@ class Subject:
         for observer in self.observers:
             observer.update(self)
 
+
 class Observer:
     def update(self, subject):
         pass
+
 
 class ImportSubject(Subject):
     def __init__(self, initial_state=0, *args, **kwargs):
@@ -28,9 +30,11 @@ class ImportSubject(Subject):
         self.state = state
         self.notify()
 
+
 class ImportObserver(Observer):
     def update(self, subject):
         print("state changed to:", subject.get_state())
+
 
 # Example usage
 # subject = ImportSubject()

@@ -17,19 +17,22 @@ from src.utils.lazy_import_constructs import ImportConversionMapper
 
 
 @shared_task(name="mds_process_csv_file")
-def mds_process_csv_file(file_path: str = "src/tmp/data/sonotheque1.csv", num_rows: int = 10000):
+def mds_process_csv_file(
+    file_path: str = "src/tmp/data/sonotheque1.csv", num_rows: int = 10000
+):
     logger = get_task_logger(__name__)
     # preparation_chain = prepare_duckdb_persistance.s("sonotheque.duckdb") | create_import_records_table.s(file_path) | show_tables.s() | insert_defaut_items.s() | insert_taxa_checklist.s()
     # preparation_chain()
-    res = chain(prepare_duckdb_persistance.s("sonotheque.duckdb"), create_import_records_table.s(file_path), 
-                show_tables.s(), add_uuids_to_sounds_records.s(), insert_defaut_items.s(), insert_taxa_checklist.s()
-                )()
+    res = chain(
+        prepare_duckdb_persistance.s("sonotheque.duckdb"),
+        create_import_records_table.s(file_path),
+        show_tables.s(),
+        add_uuids_to_sounds_records.s(),
+        insert_defaut_items.s(),
+        insert_taxa_checklist.s(),
+    )()
     df_length = res.get()
     logger.info(f"df_length: {df_length}")
-
-
-
-    
 
 
 @shared_task(name="prepare-duckdb-persistance")
@@ -64,16 +67,19 @@ def prepare_duckdb_persistance(db_name: str = "sonotheque.duckdb") -> str:
         logger.info(f"{db_name} file already exists.")
     return db_path
 
+
 @shared_task(name="create-import-records-table")
 def create_import_records_table(db_path: str, csv_file_path: str) -> str:
     logger = get_task_logger(__name__)
     con = duckdb.connect(db_path)
     try:
         # Create a table named 'import_records' from the CSV file
-        con.execute(f"""
-            CREATE TABLE IF NOT EXISTS import_records AS 
+        con.execute(
+            f"""
+            CREATE TABLE IF NOT EXISTS import_records AS
             SELECT * FROM read_csv('{csv_file_path}', header=True, delim=';')
-        """)
+        """
+        )
         logger.info(f"Successfully created 'import_records' table from {csv_file_path}")
     except Exception as e:
         logger.error(f"Error creating 'import_records' table: {str(e)}")
@@ -81,6 +87,7 @@ def create_import_records_table(db_path: str, csv_file_path: str) -> str:
     finally:
         con.close()
         return db_path
+
 
 @shared_task(name="show-tables")
 def show_tables(db_path) -> str:
@@ -100,16 +107,19 @@ def show_tables(db_path) -> str:
         ddb_con.close()
         logger.info("DuckDB connection closed.")
         return db_path
-    
+
+
 @shared_task(name="add-uuids-to-sounds-records")
 def add_uuids_to_sounds_records(db_path) -> str:
     logger = get_task_logger(__name__)
     con = duckdb.connect(db_path)
     try:
-        logger.info("Add a UUID column to records and generate a UUID for each unique SON_UID value")
+        logger.info(
+            "Add a UUID column to records and generate a UUID for each unique SON_UID value"
+        )
         # Check if record_uuid column already exists
         columns = con.sql("PRAGMA table_info(import_records)").df()
-        if 'record_uuid' not in columns['name'].values:
+        if "record_uuid" not in columns["name"].values:
             ### SQL Queries ##
             add_record_uuid_query = """
             --beginsql
@@ -126,11 +136,11 @@ def add_uuids_to_sounds_records(db_path) -> str:
                 FROM import_records
             ),
             uuid_mapping AS (
-                SELECT 
+                SELECT
                     SON_UID,
                     uuid() AS new_uuid
                 FROM unique_son_uids
-               )
+            )
             UPDATE import_records
             SET record_uuid = uuid_mapping.new_uuid
             FROM uuid_mapping
@@ -140,7 +150,7 @@ def add_uuids_to_sounds_records(db_path) -> str:
             # Add the record_uuid column to the import_records table
             verify_sound_uuids_query = """
             --beginsql
-                    SELECT 
+                    SELECT
                         record_uuid,
                         SON_UID,
                         NOM_SCIENTIFIQUE,
@@ -167,7 +177,8 @@ def add_uuids_to_sounds_records(db_path) -> str:
     finally:
         con.close()
         return db_path
-    
+
+
 @shared_task(name="insert-default-items")
 def insert_defaut_items(db_path) -> str:
     logger = get_task_logger(__name__)
@@ -188,7 +199,7 @@ def insert_taxa_checklist(db_path) -> str:
     aggregate_taxa_query = """
     -- aggregation to get a list of taxa with their SON_UIDs and COLLECTION_CODE
     --beginsql
-    SELECT 
+    SELECT
         uuid() AS UUID,
         NOM_SCIENTIFIQUE,
         LIST(SON_UID) AS SON_UIDS,
@@ -209,15 +220,19 @@ def insert_taxa_checklist(db_path) -> str:
         # con.close()
         # return len(results_df)
         callback = merge_gbif_result.s()
-        header = [fetch_taxa_gbif_data.s(row) for row in con.sql(aggregate_taxa_query).fetchall()]
+        header = [
+            fetch_taxa_gbif_data.s(row)
+            for row in con.sql(aggregate_taxa_query).fetchall()
+        ]
         result = chord(header)(callback)
         result.get()
         con.close()
         return len(result)
     except Exception as e:
-       logger.error(f"Failed to connect to DuckDB: {str(e)}")
-       raise
-    
+        logger.error(f"Failed to connect to DuckDB: {str(e)}")
+        raise
+
+
 @shared_task(name="fetch-taxa-gbif-data")
 def fetch_taxa_gbif_data(row: list) -> TaxonInDB:
     # import time
@@ -236,6 +251,7 @@ def fetch_taxa_gbif_data(row: list) -> TaxonInDB:
     logger.info(f"taxon: {taxon}")
     return taxon
 
+
 @shared_task(name="merge-gbif-result")
 def merge_gbif_result(rows) -> str:
     logger = get_task_logger(__name__)
@@ -244,16 +260,12 @@ def merge_gbif_result(rows) -> str:
         df = pd.DataFrame(rows)
         logger.info(f"Created DataFrame with shape: {df.shape}")
         logger.info(f"DataFrame columns: {df.columns}")
-        
+
         # Log a sample of the data (first few rows)
         logger.info(f"Sample data:\n{df.head()}")
-        
+
         return len(df)
     except Exception as e:
         logger.error(f"Failed to create DataFrame: {str(e)}")
         raise
     pass
-    
-
-
-

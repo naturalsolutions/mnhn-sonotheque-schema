@@ -11,7 +11,12 @@ from sqlalchemy.orm import Session
 
 from . import users_router
 from .schemas import UserBody
-from .tasks import sample_task, task_process_notification, task_send_welcome_email, task_add_subscribe
+from .tasks import (
+    sample_task,
+    task_process_notification,
+    task_send_welcome_email,
+    task_add_subscribe,
+)
 from .models import User
 from src.database import get_db_session
 
@@ -50,15 +55,15 @@ def task_status(task_id: str):
     task = AsyncResult(task_id)
     state = task.state
 
-    if state == 'FAILURE':
+    if state == "FAILURE":
         error = str(task.result)
         response = {
-            'state': state,
-            'error': error,
+            "state": state,
+            "error": error,
         }
     else:
         response = {
-            'state': state,
+            "state": state,
         }
     return JSONResponse(response)
 
@@ -95,8 +100,8 @@ def form_socketio_example(request: Request):
 def transaction_celery(session: Session = Depends(get_db_session)):
     username = random_username()
     user = User(
-        username=f'{username}',
-        email=f'{username}@test.com',
+        username=f"{username}",
+        email=f"{username}@test.com",
     )
     with session.begin():
         session.add(user)
@@ -107,14 +112,9 @@ def transaction_celery(session: Session = Depends(get_db_session)):
 
 
 @users_router.post("/user_subscribe/")
-def user_subscribe(
-        user_body: UserBody,
-        session: Session = Depends(get_db_session)
-):
+def user_subscribe(user_body: UserBody, session: Session = Depends(get_db_session)):
     with session.begin():
-        user = session.query(User).filter_by(
-            username=user_body.username
-        ).first()
+        user = session.query(User).filter_by(username=user_body.username).first()
         if not user:
             user = User(
                 username=user_body.username,
