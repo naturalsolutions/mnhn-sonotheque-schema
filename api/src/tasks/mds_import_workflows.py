@@ -170,7 +170,6 @@ def add_uuids_to_sounds_records(db_path) -> str:
             con.sql(verify_sound_uuids_query).show()
         else:
             logger.info("record_uuid column already exists in import_records table")
-        return db_path
     except Exception as e:
         logger.error(f"Failed to add UUID column: {str(e)}")
         raise
