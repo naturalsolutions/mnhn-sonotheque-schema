@@ -67,3 +67,34 @@ docker compose exec db pg_dump -U $POSTGRES_USER -d $POSTGRES_DB\
 Database conceptual data model can be preview at the following URL:
 
 [https://dbdiagram.io/d/sonothque_db_schema_v1_0_0_rc3-66ebcfb3a0828f8aa6594b36](https://dbdiagram.io/d/sonothque_db_schema_v1_0_0_rc3-66ebcfb3a0828f8aa6594b36)
+
+### Database Import
+
+Schéma du flow de l'import des données
+
+```mermaid
+flowchart TD
+0((Start Import))--> IDDB(initialize duckDB)
+IDDB --DuckDB Table ready--> DDT[/DuckDB Table/]
+DDT --> LRF(Load Raw file)
+LRF --> DDTF[/DuckDB Table filled/]
+DDTF --medias--> SRU(Compute Sound Records UUIDs)
+DDTF --metadata--> ADO(*Add default organization*)
+ADO --> ADU(*Add default main user*)
+ADU --> ADD(*Add default main dataset*)
+ADD --> ADC(*Add default main collection*)
+
+DDTF --taxonomie--> TR(Moulinette taxref)
+TR --taxonomie: dataframe--> TRV[/*Taxonomie Récupérée et Vérifiée*/]
+TRV --> TDB(*Taxonomie en DuckDB*)
+SRU --calcul évènements--> E[/Evenements générés/]
+
+E --> JTM{Jointure}
+TDB --> JTM
+
+JTM --> JJM{Jointure}
+ADC --> JJM
+
+JJM --> DBR(((DuckDB Ready)))
+DBR --(prototypée mais non développée)--> Postgres
+```
