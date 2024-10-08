@@ -20,6 +20,7 @@ def divide(x, y):
     # rdb.set_trace()
 
     import time
+
     time.sleep(5)
     return x / y
 
@@ -43,9 +44,11 @@ def task_process_notification():
 @task_postrun.connect
 def task_postrun_handler(task_id, **kwargs):
     from src.ws.views import update_celery_task_status
+
     async_to_sync(update_celery_task_status)(task_id)
 
     from src.ws.views import update_celery_task_status_socketio
+
     update_celery_task_status_socketio(task_id)
 
 
@@ -75,7 +78,7 @@ def task_send_welcome_email(user_pk):
 
     with db_context() as session:
         user = session.get(User, user_pk)
-        logger.info(f'send email to {user.email} {user.id}')
+        logger.info(f"send email to {user.email} {user.id}")
 
 
 @shared_task()
@@ -86,7 +89,7 @@ def task_test_logger():
 @after_setup_logger.connect()
 def on_after_setup_logger(logger, **kwargs):
     formatter = logger.handlers[0].formatter
-    file_handler = logging.FileHandler('celery.log')
+    file_handler = logging.FileHandler("celery.log")
     file_handler.setFormatter(formatter)
     logger.addHandler(file_handler)
 

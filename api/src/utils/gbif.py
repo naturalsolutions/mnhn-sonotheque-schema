@@ -9,28 +9,28 @@ from src.schemas.taxon import TaxonInDB
 def camel_to_snake(string: str) -> str:
     """
     Convert a camelCase string to snake_case.
-    
+
     Args:
         string (str): The camelCase string to convert.
-    
+
     Returns:
         str: The converted snake_case string.
     """
-    pattern = re.compile(r'(?<!^)(?=[A-Z])')
-    return pattern.sub('_', string).lower()
+    pattern = re.compile(r"(?<!^)(?=[A-Z])")
+    return pattern.sub("_", string).lower()
+
 
 def convert_dict_keys_to_snake_case(data: dict) -> dict:
     """
     Convert all keys in a dictionary from camelCase to snake_case.
-    
+
     Args:
         data (dict): The dictionary with camelCase keys.
-    
+
     Returns:
         dict: A new dictionary with all keys converted to snake_case.
     """
     return {camel_to_snake(key): value for key, value in data.items()}
-
 
 
 def fetch_gbif_result(name: str) -> TaxonInDB | None:

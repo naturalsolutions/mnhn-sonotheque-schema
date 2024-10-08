@@ -15,7 +15,9 @@ class DatasetSchema(BaseModel):
         None,
         description="Publication unique identifier for a reference associated to this datasets",
     )
-    created_by: Optional[UUID] = Field(None, description="Foreign Key to the dataset creator")
+    created_by: Optional[UUID] = Field(
+        None, description="Foreign Key to the dataset creator"
+    )
     maintained_by: Optional[UUID] = Field(
         None,
         description="Foreign Key to the dataset maintainers; just one maintainer for a given dataset in this version of the schema",
@@ -23,7 +25,9 @@ class DatasetSchema(BaseModel):
     contact: UUID = Field(
         ..., description="Foreign Key to the contact person for this dataset"
     )
-    published_by: Optional[UUID] = Field(..., description="Foreign Key to the organization")
+    published_by: Optional[UUID] = Field(
+        ..., description="Foreign Key to the organization"
+    )
     created_at: datetime = Field(..., description="Creation datetime for this resource")
     updated_at: datetime = Field(
         ..., description="Modification datetime for this resource"

@@ -13,7 +13,7 @@ class DynamicPropertiesStruct(Model):
 class OrganizationBase(Model):
     parent_id: Optional[str] = Field(
         default=None,
-        description="FK to represent hierarchy in organization, e.g., main organizations and units"
+        description="FK to represent hierarchy in organization, e.g., main organizations and units",
     )
     name: str = Field(description="Name of the organizations")
     type: str = Field(description="Category of the organization")
@@ -24,24 +24,28 @@ class OrganizationBase(Model):
     description: Optional[str] = Field(
         default=None, description="Description of the organization"
     )
-    dynamic_properties: DynamicPropertiesStruct = Field(description="Flexible JSON schema to store additional properties")
+    dynamic_properties: DynamicPropertiesStruct = Field(
+        description="Flexible JSON schema to store additional properties"
+    )
+
 
 class OrganizationCreate(OrganizationBase):
     pass
 
+
 class OrganizationUpdate(OrganizationBase):
     pass
+
 
 class Organization(OrganizationBase):
     id: str = Field(description="Organization DB unique identifier")
     created_at: datetime = Field(
-         description="Timestamp of resource creation in database"
+        description="Timestamp of resource creation in database"
     )
-    updated_at: datetime = Field(
-         description="Timestamp of resource update in database"
-    )
+    updated_at: datetime = Field(description="Timestamp of resource update in database")
 
-class OrganizationExample():
+
+class OrganizationExample:
     import polars as pl
     from uuid import uuid4
     from datetime import datetime
@@ -61,12 +65,12 @@ class OrganizationExample():
             "type": ["Non-Profit"],
             "contact": ["example@organization.org"],
             "located_in": [str(uuid4())],
-            "description": ["This is an example organization used for demonstration purposes."],
+            "description": [
+                "This is an example organization used for demonstration purposes."
+            ],
             "dynamic_properties": [{"key1": "value1", "key2": "value2"}],
             "created_at": [datetime.now()],
             "updated_at": [datetime.now()],
         }
 
         return pl.DataFrame(data)
-
-

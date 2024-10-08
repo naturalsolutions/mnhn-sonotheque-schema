@@ -9,6 +9,7 @@ from src.users.models import User
 
 # tasks
 
+
 @custom_celery_task()
 def successful_task(user_id):
     with db_context() as session:
@@ -28,6 +29,7 @@ def throwing_retry_task():
 
 
 # tests
+
 
 def test_custom_celery_task(db_session, settings, user, monkeypatch):
     monkeypatch.setattr(settings, "CELERY_TASK_ALWAYS_EAGER", True, raising=False)

@@ -17,8 +17,7 @@ def test_task_generate_avatar_thumbnail(db_session, settings, member):
     assert member.avatar_thumbnail
 
     thumbnail_full_path = os.path.join(
-        settings.UPLOADS_DEFAULT_DEST,
-        member.avatar_thumbnail
+        settings.UPLOADS_DEFAULT_DEST, member.avatar_thumbnail
     )
     im = Image.open(thumbnail_full_path)
 

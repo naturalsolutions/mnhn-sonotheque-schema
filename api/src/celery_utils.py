@@ -34,7 +34,6 @@ def get_task_info(task_id):
 
 
 class custom_celery_task:
-
     EXCEPTION_BLOCK_LIST = (
         IndexError,
         KeyError,
@@ -65,20 +64,16 @@ class custom_celery_task:
 
     def _get_retry_countdown(self, task_func):
         retry_backoff = int(
-            max(1.0, float(self.task_kwargs.get('retry_backoff', True)))
+            max(1.0, float(self.task_kwargs.get("retry_backoff", True)))
         )
-        retry_backoff_max = int(
-            self.task_kwargs.get('retry_backoff_max', 600)
-        )
-        retry_jitter = self.task_kwargs.get(
-            'retry_jitter', True
-        )
+        retry_backoff_max = int(self.task_kwargs.get("retry_backoff_max", 600))
+        retry_jitter = self.task_kwargs.get("retry_jitter", True)
 
         countdown = get_exponential_backoff_interval(
             factor=retry_backoff,
             retries=task_func.request.retries,
             maximum=retry_backoff_max,
-            full_jitter=retry_jitter
+            full_jitter=retry_jitter,
         )
 
         return countdown

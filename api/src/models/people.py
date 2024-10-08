@@ -5,7 +5,6 @@ from src.database import Base, DefaultColsMixin
 from src.models.identifications import Identification  # Add this import
 
 
-
 class Person(DefaultColsMixin, Base):
     __tablename__ = "people"
 
@@ -31,7 +30,13 @@ class Person(DefaultColsMixin, Base):
     # edited_medias = relationship("Media", backref="editor")
     # recorded_medias = relationship("Media", backref="recorder")
     # owned_media_files = relationship("MediaFile", backref="owner")
-    reviewed_identifications = relationship("Identification", foreign_keys=[Identification.review_by], back_populates="reviewer")
+    reviewed_identifications = relationship(
+        "Identification",
+        foreign_keys=[Identification.review_by],
+        back_populates="reviewer",
+    )
     submitted_identifications = relationship(
-        "Identification", foreign_keys=[Identification.identified_by], back_populates="identifier"
+        "Identification",
+        foreign_keys=[Identification.identified_by],
+        back_populates="identifier",
     )

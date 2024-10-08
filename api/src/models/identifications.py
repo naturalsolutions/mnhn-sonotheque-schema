@@ -27,5 +27,11 @@ class Identification(Base):
     # Relationships with backpopulates
     occurrence = relationship("Occurrence", back_populates="identifications")
     taxon = relationship("Taxon", back_populates="identifications")
-    reviewer = relationship("Person", foreign_keys=[review_by], back_populates="reviewed_identifications")
-    identifier = relationship("Person", foreign_keys=[identified_by], back_populates="submitted_identifications")
+    reviewer = relationship(
+        "Person", foreign_keys=[review_by], back_populates="reviewed_identifications"
+    )
+    identifier = relationship(
+        "Person",
+        foreign_keys=[identified_by],
+        back_populates="submitted_identifications",
+    )

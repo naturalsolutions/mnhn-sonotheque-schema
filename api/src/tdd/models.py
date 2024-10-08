@@ -4,7 +4,6 @@ from src.database import Base
 
 
 class Member(Base):
-
     __tablename__ = "members"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
